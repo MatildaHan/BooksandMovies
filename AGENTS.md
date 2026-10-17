@@ -1,5 +1,17 @@
 # Repository Guidelines
 
+## 项目约定与交付规则
+
+- 本仓库用于维护「须臾之间」个人网站，基于 Amytis；保持现有技术栈和视觉风格，按当前任务做轻量修改，不顺带重构、升级依赖或全仓格式化。
+- 默认使用中文沟通。站点身份与功能配置统一维护在 `site.config.ts`；未提供的个人信息、正式内容、域名和外部服务配置不得自行编造。
+- 正式内容放在 `content/`；演示与回归测试样本只放在 `tests/fixtures/site/`，不得重新发布到正式内容树。
+- 开始修改前检查 Git 分支、远程地址和工作区状态。保留其他聊天、用户及已有的未提交更改，只暂存当前任务的文件或差异块；必要时使用独立工作树。
+- 用户已授权：本项目每次任务的更改完成并通过相关检查后，自动提交并推送到 `https://github.com/MatildaHan/BooksandMovies.git`，无需再次询问。用户在具体任务中要求不提交或不推送时，以该要求为准。
+- 推送前核对远程确为上述仓库，检查差异与暂存内容，使用 Conventional Commits；向当前任务分支及其 upstream 正常推送。没有 upstream 时，在目标仓库建立同名分支；不要强制推送、覆盖他人提交或擅自合并分支。
+- 检查按影响选择：纯文档修改检查内容、链接与 `git diff --check`；代码、内容解析、路由或配置修改执行相应 lint、类型检查与测试；影响静态导出、资源、搜索或站点配置时补充构建，提交 PR 前执行 `bun run validate`。
+- 不上传依赖、构建产物、缓存、密钥、环境文件和 `imports/` 原始资料。网络、认证、检查或冲突导致无法交付时，保留本地工作并说明具体阻塞，不得把未执行或失败的检查报告为通过。
+- 最终交付说明更改内容、验证结果、分支、提交号、是否已推送及是否进入 `main`，并提供 GitHub 链接。推送成功不等于网站已经部署，只有验证过部署后才能声称网站已更新。
+
 ## Project Structure & Module Organization
 - `src/app/`: Next.js App Router pages and route handlers (`posts`, `series`, `books`, `flows`, `notes`, `tags`, `authors`, feeds, graph, sitemap, custom `[slug]` routes).
 - `src/components/`: Reusable UI building blocks (cards, navigation, search, i18n/theme controls).

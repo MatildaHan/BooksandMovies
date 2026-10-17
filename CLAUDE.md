@@ -73,7 +73,7 @@ For a new feature or non-trivial change:
 - **Branch.** Work on a dedicated `<type>/<topic>` branch off `main`, not directly on `main`.
 - **Commit in focused slices.** One commit per logical slice (e.g. split a dead-code removal from the feature that replaces it). Keep `bun run lint` green at each commit so the branch stays bisectable. Conventional Commits: `feat | fix | refactor | perf | chore | docs | test | release`; subject under ~70 chars; body explains *why*; no `Co-Authored-By` trailers.
 - **Tests + docs in the same change.** Update `docs/ARCHITECTURE.md` / `docs/CONTRIBUTING.md` / `docs/TROUBLESHOOTING.md` alongside seam/workflow/invariant changes — not as a follow-up.
-- **Open a PR** into `main` when the branch is green. Do not add the `🤖 Generated with [Claude Code]` footer to PR descriptions. Pushing, and opening PRs are actions the user authorizes — don't push or open a PR unless asked.
+- **Delivery:** follow the project-specific rules in `AGENTS.md`. The user has authorized automatic commits and normal pushes to `https://github.com/MatildaHan/BooksandMovies.git` after the task's relevant checks pass; do not ask again unless the user changes that instruction. Preserve other chats' work and stage only this task's changes. For feature branches, open a PR into `main` when requested; do not merge without authorization or add the `🤖 Generated with [Claude Code]` footer.
 
 ## Verifying a change
 
