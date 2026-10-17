@@ -85,15 +85,6 @@ mock.module('next/navigation', () => ({
 mock.module('next/link', () => ({ default: 'a' }));
 mock.module('next/image', () => ({ default: 'img' }));
 
-// ─── i18n stub (module-level — safe) ─────────────────────────────────────────
-mock.module('@/lib/i18n', () => ({
-  t: (k: string) => k,
-  tWith: (k: string) => k,
-  resolveLocale: (v: unknown) =>
-    typeof v === 'string' ? v : ((v as Record<string, string>)?.en ?? ''),
-  useLanguage: () => ({ locale: 'en', setLocale: () => {} }),
-}));
-
 // ─── Component / layout stubs (module-level — safe) ──────────────────────────
 const Noop = { default: () => null };
 
@@ -682,9 +673,8 @@ describe('generateStaticParams — placeholder when content is empty', () => {
     test('[slug]/page returns at least one param (static pages + no custom paths)', async () => {
       const { generateStaticParams } = await import('../../src/app/[slug]/page');
       const params = await generateStaticParams();
-      // With no pages, no custom basePath, and no series customPaths configured,
-      // the result is an empty array — but the route itself is static so this is valid.
-      expect(Array.isArray(params)).toBe(true);
+      // Even an unwritten site needs a sentinel for output: export.
+      expect(params).toEqual([{ slug: '_' }]);
     });
 
     test('[slug]/[postSlug]/page returns [{ slug: "_", postSlug: "_" }] when no custom paths', async () => {

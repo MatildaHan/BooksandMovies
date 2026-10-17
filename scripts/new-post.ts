@@ -84,13 +84,11 @@ date: "{{date}}"
 excerpt: ""
 category: "Uncategorized"
 tags: []
-authors: ["Amytis"]
 layout: "post"
 draft: false
 latex: false
 ---
 
-Write your content here...
 `;
 }
 

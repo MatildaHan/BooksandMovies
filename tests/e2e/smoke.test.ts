@@ -1,4 +1,6 @@
 import { describe, test, expect } from "bun:test";
+import { siteConfig } from '../../site.config';
+import { resolveLocaleValue } from '../../src/lib/i18n';
 
 const BASE_URL = "http://localhost:3000";
 
@@ -14,6 +16,6 @@ describe("E2E: Smoke Test", () => {
 
     expect(response.status).toBe(200);
     const text = await response.text();
-    expect(text).toContain("Amytis");
+    expect(text).toContain(resolveLocaleValue(siteConfig.title, siteConfig.i18n.defaultLocale));
   });
 });

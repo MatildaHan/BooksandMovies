@@ -26,7 +26,8 @@ const { t } = getTranslator(DEFAULT_LOCALE);
  * Alias collisions throw inside topLevelSlugParams (strict build).
  */
 export async function generateStaticParams() {
-  return [...topLevelSlugParams(), ...localeHomeParams()];
+  const params = [...topLevelSlugParams(), ...localeHomeParams()];
+  return params.length > 0 ? params : [{ slug: '_' }];
 }
 
 export const dynamicParams = false;

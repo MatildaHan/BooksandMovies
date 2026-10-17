@@ -1,10 +1,3 @@
-// Single-language starter template for Amytis.
-// Copy this file to site.config.ts and customize it for your site.
-//
-// This template has i18n disabled. All locale-aware fields use plain strings.
-// To add multi-language support later, switch to { en: '...', zh: '...' } objects
-// and set i18n.enabled: true with your locales.
-
 export interface NavChildItem {
   name: string;
   url: string;
@@ -21,20 +14,17 @@ export interface NavItem {
   children?: NavChildItem[]; // static sub-links rendered as a dropdown
 }
 
-// Defined up-front so nav and posts config stay in sync — change once here
-const postsBasePath = 'posts'; // Change to e.g. 'articles' to serve all posts at /articles/[slug]
-
 // Defined up-front so footer.connect can reference these URLs without duplication
 const social = {
-  github: "https://github.com/your-username",
-  twitter: "https://twitter.com/your-username",
-  email: "mailto:you@example.com",
+  github: "https://github.com/hutusi/amytis",
+  twitter: "https://twitter.com/hutusi",
+  email: "mailto:huziyong@gmail.com",
 };
 
 export const siteConfig = {
 
   // ── Site identity ─────────────────────────────────────────────────────────
-  title: "My Garden",
+  title: { en: "Amytis", zh: "Amytis" },
   logo: {
     // Path to navbar logo image served from public/ (leave empty for the default built-in icon)
     // Accepts SVG, PNG, etc. — e.g. "/logo.svg" or "/images/my-logo.png"
@@ -42,37 +32,35 @@ export const siteConfig = {
     // Path to favicon served from public/ (defaults to /icon.svg)
     favicon: "/icon.svg",
   },
-  description: "A personal digital garden — notes, articles, and ideas.",
-  baseUrl: "https://example.com", // Replace with your actual domain
+  description: { en: "Amytis — an elegant open-source framework for building your personal digital garden.", zh: "Amytis — 优雅的开源数字花园框架。" },
+  baseUrl: "https://amytis.vercel.app", // Replace with your actual domain
   ogImage: "/og-image.png", // Default OG/social preview image — place a 1200×630 PNG at public/og-image.png
-  footerText: `© ${new Date().getFullYear()} My Garden. All rights reserved.`,
+  footerText: { en: `© ${new Date().getFullYear()} Amytis. All rights reserved.`, zh: `© ${new Date().getFullYear()} Amytis. 保留所有权利。` },
 
   // ── i18n ──────────────────────────────────────────────────────────────────
   i18n: {
-    // i18n is disabled: the language switcher is hidden and defaultLocale is always used.
-    // To enable multi-language support, set enabled: true, add more locales, and
-    // convert plain string fields to locale maps: e.g. title: { en: '...', zh: '...' }.
-    //
-    // Content in another language lives in a locale tree mirroring content/:
-    // content/zh/posts/foo.md is served at /zh/posts/foo/ and pairs with
-    // content/posts/foo.md (same relative path) as its translation. The
-    // default locale's content stays at the content/ root, unprefixed.
-    // Locale codes become reserved URL segments while i18n is enabled.
-    enabled: false,
+    // Set enabled: false to disable multi-language support entirely.
+    // The language switcher will be hidden and the defaultLocale is always used.
+    // When disabled, all locale-aware fields (title, description, hero, etc.)
+    // accept plain strings instead of { en: '...', zh: '...' } objects.
+    enabled: true,
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'zh'],
   },
 
   // ── Navigation ────────────────────────────────────────────────────────────
   nav: [
-    { name: "Posts", url: `/${postsBasePath}`, weight: 1 },
-    { name: "Series", url: "/series", weight: 2 },
-    { name: "About", url: "/about", weight: 3 },
-    { name: "More", url: "", weight: 4, children: [
-      { name: "Notes", url: "/notes" },   // hidden while features.flow is disabled
-      { name: "Graph", url: "/graph" },   // hidden while features.flow is disabled
+    { name: "Flow", url: "/flows", weight: 1 },
+    { name: "Posts", url: "/posts", weight: 2 },
+    { name: "Series", url: "/series", weight: 3, dropdown: ["digital-garden", "markdown-showcase", "ai-nexus-weekly"] },
+    { name: "Books", url: "/books", weight: 4, dropdown: [] },
+    { name: "About", url: "/about", weight: 5 },
+    { name: "More", url: "", weight: 6, children: [
+      { name: "Notes", url: "/notes" },
+      { name: "Graph", url: "/graph" },
       { name: "Archive", url: "/archive", dividerBefore: true },
       { name: "Tags", url: "/tags" },
+      { name: "Links", url: "/links" },
       { name: "Subscribe", url: "/subscribe", dividerBefore: true },
     ]},
   ] as NavItem[],
@@ -82,7 +70,8 @@ export const siteConfig = {
     explore: [
       { name: "Archive", url: "/archive", weight: 1 },
       { name: "Tags", url: "/tags", weight: 2 },
-      { name: "About", url: "/about", weight: 3 },
+      { name: "Links", url: "/links", weight: 3 },
+      { name: "About", url: "/about", weight: 4 },
     ],
     connect: [
       { name: "GitHub", url: social.github, weight: 1 },
@@ -93,12 +82,16 @@ export const siteConfig = {
     builtWith: {
       show: true,
       url: "https://github.com/hutusi/amytis",
-      text: "Built with Amytis",
+      text: { en: "Built with Amytis", zh: "基于 Amytis 构建" },
     },
+    // Optional custom links shown in the footer bottom bar.
+    // Common uses: ICP registration (China), PSB registration, cookie policy, sitemap, etc.
+    // Example:
     // bottomLinks: [
     //   { text: '京ICP备12345678号', url: 'https://beian.miit.gov.cn/' },
+    //   { text: 'Cookie Policy' },     // url is optional — renders as plain text
     // ],
-    bottomLinks: [],
+    bottomLinks: [] as { text: string | Record<string, string>; url?: string }[],
   },
 
   // ── Social & sharing ──────────────────────────────────────────────────────
@@ -107,7 +100,7 @@ export const siteConfig = {
     enabled: true,
     // Supported: twitter, facebook, linkedin, weibo, reddit, hackernews,
     //            telegram, bluesky, mastodon, douban, zhihu, copy
-    platforms: ['twitter', 'facebook', 'linkedin', 'copy'],
+    platforms: ['twitter', 'facebook', 'linkedin', 'weibo', 'copy'],
   },
   subscribe: {
     substack: '',       // Substack publication URL, e.g., 'https://yourname.substack.com'
@@ -123,48 +116,48 @@ export const siteConfig = {
   features: {
     posts: {
       enabled: true,
-      name: "Articles",
+      name: { en: "Articles", zh: "文章" },
     },
     series: {
       enabled: true,
-      name: "Series",
+      name: { en: "Series", zh: "系列" },
     },
     books: {
-      enabled: false,
-      name: "Books",
+      enabled: true,
+      name: { en: "Books", zh: "书籍" },
     },
     flow: {
-      enabled: false,
-      name: "Flow",
+      enabled: true,
+      name: { en: "Flow", zh: "随笔" },
     },
   },
 
   // ── Homepage ──────────────────────────────────────────────────────────────
   hero: {
-    tagline: "My Personal Digital Garden",
-    title: "A place for ideas to grow.",
-    subtitle: "Notes, articles, and explorations — written for curiosity, shared for connection.",
+    tagline: { en: "Open Source Digital Garden", zh: "开源数字花园框架" },
+    title: { en: "A home for ideas to grow, link, and evolve.", zh: "让想法生长、关联、演化的地方。" },
+    subtitle: { en: "An elegant, open-source framework for cultivating personal knowledge — from raw daily flows to refined articles, curated series, and structured books.", zh: "优雅的开源知识培育框架——从每日随笔到精炼文章，从系列合集到结构化书籍，层层深化。" },
   },
   homepage: {
     sections: [
       { id: 'hero',            enabled: true, weight: 1 },
       { id: 'featured-posts',  enabled: true, weight: 2, maxItems: 4, order: 'shuffle' as 'shuffle' | 'date-desc' | 'date-asc' },
-      { id: 'latest-posts',    enabled: true, weight: 3, maxItems: 3 },
-      { id: 'recent-flows',    enabled: false, weight: 4, maxItems: 8 },
+      { id: 'latest-posts',    enabled: true, weight: 3, maxItems: 4 },
+      { id: 'recent-flows',    enabled: true, weight: 4, maxItems: 7 },
       { id: 'featured-series', enabled: true, weight: 5, maxItems: 6, order: 'shuffle' as 'shuffle' | 'date-desc' | 'date-asc' },
-      { id: 'featured-books',  enabled: false, weight: 6, maxItems: 4, order: 'shuffle' as 'shuffle' | 'date-desc' | 'date-asc' },
+      { id: 'featured-books',  enabled: true, weight: 6, maxItems: 4, order: 'shuffle' as 'shuffle' | 'date-desc' | 'date-asc' },
     ],
   },
 
   // ── Content ───────────────────────────────────────────────────────────────
   pagination: {
-    posts: 10,
+    posts: 5,
     series: 5,
     flows: 20,
     notes: 20,
   },
   posts: {
-    basePath: postsBasePath,
+    basePath: 'posts', // Change to e.g. 'articles' to serve all posts at /articles/[slug]
     toc: true,
     showFuturePosts: false,
     includeDateInUrl: false,
@@ -172,7 +165,7 @@ export const siteConfig = {
     authors: {
       // Default author names applied when a post has no author in its frontmatter.
       // Falls back to series authors first, then to this list.
-      default: ["Your Name"] as string[],
+      default: ["John Hu"] as string[],
       showInHeader: true,   // Show author byline below the post title
       showAuthorCard: true, // Show author bio card at the end of the post
     },
@@ -196,7 +189,6 @@ export const siteConfig = {
   flows: {
     recentCount: 5,
   },
-
   feed: {
     maxItems: 20,                                           // Max items per feed (0 = no limit)
     format: 'rss' as 'rss' | 'atom' | 'both',              // Format(s) to serve and advertise
@@ -225,7 +217,7 @@ export const siteConfig = {
 
   // ── Analytics ─────────────────────────────────────────────────────────────
   analytics: {
-    providers: [], // enable one or many: 'umami' | 'plausible' | 'google'
+    providers: ['umami'] as ('umami' | 'plausible' | 'google')[], // enable one or many; [] disables analytics
     umami: {
       websiteId: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || '', // Your Umami Website ID
       src: process.env.NEXT_PUBLIC_UMAMI_URL || 'https://us.umami.is/script.js', // Default or self-hosted URL
@@ -241,7 +233,7 @@ export const siteConfig = {
 
   // ── Comments ──────────────────────────────────────────────────────────────
   comments: {
-    provider: null, // 'giscus' | 'disqus' | null
+    provider: 'giscus', // 'giscus' | 'disqus' | null
     // Per-category defaults. Set false to disable comments for an entire content type.
     // Individual pages can override with `commentable: true/false` in their frontmatter.
     commentable: {
@@ -252,10 +244,10 @@ export const siteConfig = {
       staticPages: false,
     },
     giscus: {
-      repo: 'your-username/your-repo', // username/repo
-      repoId: '',
+      repo: 'hutusi/amytis', // username/repo
+      repoId: 'R_kgDOQ1YSwA',
       category: 'Announcements',
-      categoryId: '',
+      categoryId: 'DIC_kwDOQ1YSwM4C2NmL',
     },
     disqus: {
       shortname: '',
@@ -273,10 +265,12 @@ export const siteConfig = {
     //     { image: "/images/authors/wechat-qr.jpg", description: "WeChat Official Account" },
     //   ],
     // },
-    "Your Name": {
-      bio: "Write a short bio here.",
+    "John Hu": {
+      bio: "Coder, Writer, Creator.",
       avatar: "/images/avatar.jpg",
-      social: [],
+      social: [
+        { image: "/images/wechat-qr.jpg", description: "Follow on WeChat" },
+      ],
     },
   } as Record<string, {
     bio?: string;

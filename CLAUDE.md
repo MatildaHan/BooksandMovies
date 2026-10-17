@@ -42,9 +42,9 @@ Quick "where do routes live" lookup. Full reference: `docs/ARCHITECTURE.md`.
 - **Search utilities:** pure helpers (URL type detection, date extraction, title cleaning, markdown stripping) live in `src/lib/search-utils.ts` and are shared by the `Search` component and the search-index route. Don't duplicate them.
 - **i18n strings:** add to `src/i18n/translations.ts`. Locale-aware config fields are `string | Record<string, string>`; resolve via `resolveLocale()` / `resolveLocaleValue()` from `src/lib/i18n.ts`.
 
-## Config sync
+## Site configuration
 
-`site.config.ts` (this repo — i18n object form, `{ en, zh }`) and `site.config.example.ts` (shipped via `create-amytis` — plain strings, single-locale, optional features default disabled) must stay in sync. Any schema change to one must be mirrored in the other.
+`site.config.ts` is the personal site's only configuration. Validate schema changes with `src/lib/config-schema.ts`. Regression tests use an independent configuration and content corpus in `tests/fixtures/site/`, copied into a disposable temporary workspace by `scripts/run-tests.ts`; these documents must never enter the published content tree.
 
 ## Gotchas (things Claude will get wrong on first try)
 

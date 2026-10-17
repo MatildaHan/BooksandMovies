@@ -1,5 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
-import { getPostsBasePath } from '../../../src/lib/urls';
+import { getPostUrl } from '../../../src/lib/urls';
+import { getAllPosts } from '../../../src/lib/content/posts';
+
+const samplePost = getAllPosts()[0];
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -61,7 +64,8 @@ test.describe('Mobile Compatibility', () => {
     }
 
     test('post page has no horizontal overflow', async ({ page }) => {
-      await page.goto(`/${getPostsBasePath()}/kitchen-sink`);
+      test.skip(!samplePost, 'No published post is available yet.');
+      await page.goto(getPostUrl(samplePost!));
       await page.waitForLoadState('load');
       expect(await hasNoHorizontalOverflow(page)).toBe(true);
     });
@@ -114,6 +118,7 @@ test.describe('Mobile Compatibility', () => {
       await page.goto('/');
       await page.waitForLoadState('load');
 
+      test.skip(await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight), 'The empty homepage does not need scrolling.');
       // Scroll down so we are away from the top
       await page.evaluate(() => window.scrollTo(0, 500));
       await page.waitForFunction(() => window.scrollY > 0);
@@ -212,7 +217,8 @@ test.describe('Mobile Compatibility', () => {
     test('post sidebar is hidden on mobile and tablet viewports', async ({ page }) => {
       if (!isMobileViewport(page)) test.skip();
 
-      await page.goto(`/${getPostsBasePath()}/kitchen-sink`, { waitUntil: 'domcontentloaded' });
+      test.skip(!samplePost, 'No published post is available yet.');
+      await page.goto(getPostUrl(samplePost!), { waitUntil: 'domcontentloaded' });
 
       // PostSidebar is `hidden lg:block` – invisible below 1024px
       const sidebar = page.locator('[data-testid="post-sidebar"]');
@@ -222,7 +228,8 @@ test.describe('Mobile Compatibility', () => {
     test('SeriesList (mobile series nav) is visible on post pages on mobile', async ({ page }) => {
       if (!isMobileViewport(page)) test.skip();
 
-      await page.goto(`/${getPostsBasePath()}/kitchen-sink`, { waitUntil: 'domcontentloaded' });
+      test.skip(!samplePost, 'No published post is available yet.');
+      await page.goto(getPostUrl(samplePost!), { waitUntil: 'domcontentloaded' });
       // Wait for article to render before querying series navigation
       await page.locator('article').first().waitFor({ state: 'visible' });
 
@@ -287,9 +294,10 @@ test.describe('Mobile Compatibility', () => {
     });
 
     test('images do not overflow their containers on a post page', async ({ page }) => {
-      await page.goto(`/${getPostsBasePath()}/kitchen-sink`, { waitUntil: 'domcontentloaded' });
+      test.skip(!samplePost, 'No published post is available yet.');
+      await page.goto(getPostUrl(samplePost!), { waitUntil: 'domcontentloaded' });
       // Wait for the article body to be present, then for all images to finish loading.
-      // The kitchen-sink post has async content (Mermaid, KaTeX, syntax highlighting)
+      // Posts may contain async content (Mermaid, KaTeX, syntax highlighting)
       // that can delay image layout settlement beyond networkidle.
       await page.locator('article').first().waitFor({ state: 'visible' });
       // Most in-article images are loading="lazy" and never load while below
@@ -332,10 +340,10 @@ test.describe('Mobile Compatibility', () => {
       // Each section we care about: check the heading and the sibling link are
       // both visible (i.e. the header row did not collapse one of them off-screen)
       const sections = [
-        { id: 'latest-posts', linkPattern: /all (posts|articles)/i },
-        { id: 'featured-series', linkPattern: /all series/i },
-        { id: 'featured-books', linkPattern: /all books/i },
-        { id: 'recent-flows', linkPattern: /all flows/i },
+        { id: 'latest-posts', linkPattern: /all (posts|articles)|所有文章|全部文章/i },
+        { id: 'featured-series', linkPattern: /all series|所有系列|全部系列/i },
+        { id: 'featured-books', linkPattern: /all books|所有书籍|全部书籍/i },
+        { id: 'recent-flows', linkPattern: /all flows|所有随笔|全部随笔/i },
       ];
 
       for (const { id, linkPattern } of sections) {
@@ -423,6 +431,7 @@ test.describe('Mobile Compatibility', () => {
 
       // Find the first cover image inside the post list and check its parent link
       const imageLink = page.locator('article a:has(img)').first();
+      test.skip(await imageLink.count() === 0, 'No published cover image is available yet.');
       await expect(imageLink).toHaveAttribute('href', /.+/);
     });
 
@@ -431,6 +440,7 @@ test.describe('Mobile Compatibility', () => {
       await page.waitForLoadState('load');
 
       const imageLink = page.locator('article a:has(img)').first();
+      test.skip(await imageLink.count() === 0, 'No published cover image is available yet.');
       const href = await imageLink.getAttribute('href');
       if (!href) { test.skip(); return; }
 
@@ -449,6 +459,7 @@ test.describe('Mobile Compatibility', () => {
       // href="/series/" (trailingSlash normalization) and would otherwise be
       // the first match, sending the test back to the series index.
       const seriesLink = page.locator('main a[href^="/series/"]').first();
+      test.skip(await seriesLink.count() === 0, 'No published series is available yet.');
       const seriesHref = await seriesLink.getAttribute('href');
       if (!seriesHref) { test.skip(); return; }
 
@@ -456,6 +467,7 @@ test.describe('Mobile Compatibility', () => {
       await page.waitForLoadState('load');
 
       const imageLink = page.locator('article a:has(img)').first();
+      test.skip(await imageLink.count() === 0, 'No published cover image is available yet.');
       await expect(imageLink).toHaveAttribute('href', /.+/);
     });
 
@@ -464,6 +476,7 @@ test.describe('Mobile Compatibility', () => {
       await page.waitForLoadState('load');
       // Scoped to main for the same navbar-trigger reason as above.
       const seriesLink = page.locator('main a[href^="/series/"]').first();
+      test.skip(await seriesLink.count() === 0, 'No published series is available yet.');
       const seriesHref = await seriesLink.getAttribute('href');
       if (!seriesHref) { test.skip(); return; }
 
@@ -471,6 +484,7 @@ test.describe('Mobile Compatibility', () => {
       await page.waitForLoadState('load');
 
       const imageLink = page.locator('article a:has(img)').first();
+      test.skip(await imageLink.count() === 0, 'No published cover image is available yet.');
       const href = await imageLink.getAttribute('href');
       if (!href) { test.skip(); return; }
 

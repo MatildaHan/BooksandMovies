@@ -2,10 +2,12 @@ import LocaleLink from '@/components/LocaleLink';
 import { siteConfig } from '../../site.config';
 import { T, TLabel, TLocale } from '@/components/T';
 import LanguageSwitch from './LanguageSwitch';
+import { getPageBySlug } from '@/lib/content/posts';
 
 // Server component: all language-reactive strings render via the T/TLabel/
 // TLocale client leaves; LanguageSwitch is its own client island.
 export default function Footer() {
+  const hasPrivacyPage = getPageBySlug('privacy') !== null;
   return (
     <footer data-site-footer className="bg-surface-faint border-t border-line mt-auto select-none">
       <div className="max-w-6xl mx-auto px-6 py-10 lg:py-16">
@@ -13,7 +15,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2">
             <LocaleLink href="/" className="flex items-center justify-center lg:justify-start gap-2 mb-4 group no-underline">
-              <svg
+              {siteConfig.logo?.src ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={siteConfig.logo.src} alt="" className="w-6 h-6" />
+              ) : <svg
                 viewBox="0 0 32 32"
                 className="w-6 h-6 text-accent group-hover:rotate-12 transition-transform duration-300"
                 fill="none"
@@ -27,7 +32,7 @@ export default function Footer() {
                 <path d="M16 4 L25 28" />
                 <path d="M11.5 18 H 20.5" />
                 <path d="M20.5 18 Q 26 14 26 8 Q 23 12 20.5 18" fill="currentColor" stroke="none" />
-              </svg>
+              </svg>}
               <span className="font-serif font-bold text-lg text-heading"><TLocale value={siteConfig.title} /></span>
             </LocaleLink>
             <p className="text-sm text-muted leading-relaxed max-w-sm mx-auto text-center lg:mx-0 lg:text-left">
@@ -84,7 +89,7 @@ export default function Footer() {
                  <span className="opacity-20">|</span>
                </>
              )}
-             <LocaleLink href="/privacy" className="hover:text-foreground transition-colors no-underline"><T k="privacy" /></LocaleLink>
+             {hasPrivacyPage && <LocaleLink href="/privacy" className="hover:text-foreground transition-colors no-underline"><T k="privacy" /></LocaleLink>}
              {siteConfig.footer?.bottomLinks?.map((item, index) => {
                const label = <TLocale value={item.text} />;
                const isInternal = item.url?.startsWith('/');

@@ -16,26 +16,26 @@ export interface NavItem {
 
 // Defined up-front so footer.connect can reference these URLs without duplication
 const social = {
-  github: "https://github.com/hutusi/amytis",
-  twitter: "https://twitter.com/hutusi",
-  email: "mailto:huziyong@gmail.com",
+  github: "",
+  twitter: "",
+  email: "",
 };
 
 export const siteConfig = {
 
   // ── Site identity ─────────────────────────────────────────────────────────
-  title: { en: "Amytis", zh: "Amytis" },
+  title: { en: "须臾之间", zh: "须臾之间" },
   logo: {
     // Path to navbar logo image served from public/ (leave empty for the default built-in icon)
     // Accepts SVG, PNG, etc. — e.g. "/logo.svg" or "/images/my-logo.png"
-    src: "",
+    src: "/logo.svg",
     // Path to favicon served from public/ (defaults to /icon.svg)
     favicon: "/icon.svg",
   },
-  description: { en: "Amytis — an elegant open-source framework for building your personal digital garden.", zh: "Amytis — 优雅的开源数字花园框架。" },
-  baseUrl: "https://amytis.vercel.app", // Replace with your actual domain
-  ogImage: "/og-image.png", // Default OG/social preview image — place a 1200×630 PNG at public/og-image.png
-  footerText: { en: `© ${new Date().getFullYear()} Amytis. All rights reserved.`, zh: `© ${new Date().getFullYear()} Amytis. 保留所有权利。` },
+  description: { en: "寄蜉蝣于天地，渺沧海之一粟", zh: "寄蜉蝣于天地，渺沧海之一粟" },
+  baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  ogImage: "/icon.svg", // Set a social preview image when it is available.
+  footerText: { en: `© ${new Date().getFullYear()} 须臾之间`, zh: `© ${new Date().getFullYear()} 须臾之间` },
 
   // ── i18n ──────────────────────────────────────────────────────────────────
   i18n: {
@@ -43,25 +43,22 @@ export const siteConfig = {
     // The language switcher will be hidden and the defaultLocale is always used.
     // When disabled, all locale-aware fields (title, description, hero, etc.)
     // accept plain strings instead of { en: '...', zh: '...' } objects.
-    enabled: true,
-    defaultLocale: 'en',
-    locales: ['en', 'zh'],
+    enabled: false,
+    defaultLocale: 'zh',
+    locales: ['zh'],
   },
 
   // ── Navigation ────────────────────────────────────────────────────────────
   nav: [
     { name: "Flow", url: "/flows", weight: 1 },
     { name: "Posts", url: "/posts", weight: 2 },
-    { name: "Series", url: "/series", weight: 3, dropdown: ["digital-garden", "markdown-showcase", "ai-nexus-weekly"] },
+    { name: "Series", url: "/series", weight: 3, dropdown: [] },
     { name: "Books", url: "/books", weight: 4, dropdown: [] },
-    { name: "About", url: "/about", weight: 5 },
     { name: "More", url: "", weight: 6, children: [
       { name: "Notes", url: "/notes" },
       { name: "Graph", url: "/graph" },
       { name: "Archive", url: "/archive", dividerBefore: true },
       { name: "Tags", url: "/tags" },
-      { name: "Links", url: "/links" },
-      { name: "Subscribe", url: "/subscribe", dividerBefore: true },
     ]},
   ] as NavItem[],
 
@@ -70,17 +67,12 @@ export const siteConfig = {
     explore: [
       { name: "Archive", url: "/archive", weight: 1 },
       { name: "Tags", url: "/tags", weight: 2 },
-      { name: "Links", url: "/links", weight: 3 },
-      { name: "About", url: "/about", weight: 4 },
     ],
     connect: [
-      { name: "GitHub", url: social.github, weight: 1 },
-      { name: "X (Twitter)", url: social.twitter, weight: 2 },
       { name: "RSS Feed", url: "/feed.xml", weight: 3, external: true },
-      { name: "Subscribe", url: "/subscribe", weight: 4 },
     ],
     builtWith: {
-      show: true,
+      show: false,
       url: "https://github.com/hutusi/amytis",
       text: { en: "Built with Amytis", zh: "基于 Amytis 构建" },
     },
@@ -134,9 +126,9 @@ export const siteConfig = {
 
   // ── Homepage ──────────────────────────────────────────────────────────────
   hero: {
-    tagline: { en: "Open Source Digital Garden", zh: "开源数字花园框架" },
-    title: { en: "A home for ideas to grow, link, and evolve.", zh: "让想法生长、关联、演化的地方。" },
-    subtitle: { en: "An elegant, open-source framework for cultivating personal knowledge — from raw daily flows to refined articles, curated series, and structured books.", zh: "优雅的开源知识培育框架——从每日随笔到精炼文章，从系列合集到结构化书籍，层层深化。" },
+    tagline: { en: "须臾之间", zh: "须臾之间" },
+    title: { en: "寄蜉蝣于天地，渺沧海之一粟", zh: "寄蜉蝣于天地，渺沧海之一粟" },
+    subtitle: { en: "", zh: "" },
   },
   homepage: {
     sections: [
@@ -165,7 +157,7 @@ export const siteConfig = {
     authors: {
       // Default author names applied when a post has no author in its frontmatter.
       // Falls back to series authors first, then to this list.
-      default: ["John Hu"] as string[],
+      default: ["须臾之间"] as string[],
       showInHeader: true,   // Show author byline below the post title
       showAuthorCard: true, // Show author bio card at the end of the post
     },
@@ -217,7 +209,7 @@ export const siteConfig = {
 
   // ── Analytics ─────────────────────────────────────────────────────────────
   analytics: {
-    providers: ['umami'] as ('umami' | 'plausible' | 'google')[], // enable one or many; [] disables analytics
+    providers: [] as ('umami' | 'plausible' | 'google')[],
     umami: {
       websiteId: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || '', // Your Umami Website ID
       src: process.env.NEXT_PUBLIC_UMAMI_URL || 'https://us.umami.is/script.js', // Default or self-hosted URL
@@ -233,7 +225,7 @@ export const siteConfig = {
 
   // ── Comments ──────────────────────────────────────────────────────────────
   comments: {
-    provider: 'giscus', // 'giscus' | 'disqus' | null
+    provider: null as 'giscus' | 'disqus' | null,
     // Per-category defaults. Set false to disable comments for an entire content type.
     // Individual pages can override with `commentable: true/false` in their frontmatter.
     commentable: {
@@ -244,10 +236,10 @@ export const siteConfig = {
       staticPages: false,
     },
     giscus: {
-      repo: 'hutusi/amytis', // username/repo
-      repoId: 'R_kgDOQ1YSwA',
-      category: 'Announcements',
-      categoryId: 'DIC_kwDOQ1YSwM4C2NmL',
+      repo: '',
+      repoId: '',
+      category: '',
+      categoryId: '',
     },
     disqus: {
       shortname: '',
@@ -265,13 +257,6 @@ export const siteConfig = {
     //     { image: "/images/authors/wechat-qr.jpg", description: "WeChat Official Account" },
     //   ],
     // },
-    "John Hu": {
-      bio: "Coder, Writer, Creator.",
-      avatar: "/images/avatar.jpg",
-      social: [
-        { image: "/images/wechat-qr.jpg", description: "Follow on WeChat" },
-      ],
-    },
   } as Record<string, {
     bio?: string;
     avatar?: string;  // Avatar image path served from public/

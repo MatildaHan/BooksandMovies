@@ -21,7 +21,7 @@
 - `scripts/`: Bun-based authoring/import/build tooling.
 - `imports/`: Local-only staging area for chat logs, PDFs, and image folders consumed by import scripts; see `imports/README.md`.
 - `packages/create-amytis/`: The `bun create amytis` scaffold CLI; keep its tests aligned with repo scaffolding behavior.
-- `site.config.ts` is the live site configuration; `site.config.example.ts` is the fuller reference template.
+- `site.config.ts` is the sole live site configuration. Content regression tests use `tests/fixtures/site/` in an isolated temporary workspace; never copy those documents into the published content tree.
 
 ## Build, Test, and Development Commands
 - `bun install`: Install dependencies.
@@ -33,7 +33,7 @@
 - `bun run clean`: Remove generated outputs (`.next`, `out`, `public/posts`, `public/books`, `public/flows`).
 - `bun run lint`: Run ESLint.
 - `bun run test` / `bun run test:unit` / `bun run test:int` / `bun run test:e2e` / `bun run test:mobile`: Run all or scoped tests. Use `bun run test`, not bare `bun test` — the bare form sweeps in Playwright e2e specs and fails.
-- Content tooling: `bun run new`, `bun run new-weekly`, `bun run new-series`, `bun run new-note`, `bun run new-flow`, `bun run new-flow-from-chat`, `bun run new-from-pdf`, `bun run new-from-images`, `bun run import-obsidian`, `bun run import-book`, `bun run sync-book`, `bun run series-draft`, `bun run add-series-redirects`.
+- Content tooling: `bun run new`, `bun run new-series`, `bun run new-note`, `bun run new-flow`, `bun run new-flow-from-chat`, `bun run new-from-pdf`, `bun run new-from-images`, `bun run import-obsidian`, `bun run import-book`, `bun run sync-book`, `bun run series-draft`, `bun run add-series-redirects`.
 
 ## Coding Style & Naming Conventions
 - Use TypeScript for app and utility code; MDX/Markdown for content.

@@ -35,7 +35,7 @@ export default function Hero({ tagline, title, subtitle, postCount, seriesCount,
     postCount   != null ? { href: '#featured-posts',  count: postCount,   label: label('posts',  'Posts')   } : null,
     seriesCount != null ? { href: '#featured-series', count: seriesCount, label: label('series', 'Series')  } : null,
     bookCount   != null ? { href: '#featured-books',  count: bookCount,   label: label('books',  'Books')   } : null,
-  ].filter((s): s is StatItem => s !== null);
+  ].filter((s): s is StatItem => s !== null && s.count > 0);
 
   return (
     <header className="relative py-12 md:py-20 flex flex-col items-center justify-center text-center max-w-6xl mx-auto min-h-[40vh] px-6">

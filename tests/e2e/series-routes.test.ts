@@ -1,63 +1,50 @@
-import { describe, test, expect } from "bun:test";
+import { describe, test, expect } from 'bun:test';
+import { getAllSeries, getSeriesData } from '../../src/lib/content/series';
+import { getAllPosts } from '../../src/lib/content/posts';
+import { getPostUrl, getSeriesUrl } from '../../src/lib/urls';
+import { getTranslator } from '../../src/lib/i18n';
+import { siteConfig } from '../../site.config';
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = 'http://localhost:3000';
+const { t } = getTranslator(siteConfig.i18n.defaultLocale);
+const sampleSeries = Object.keys(getAllSeries())[0];
+const samplePost = getAllPosts().find(post => post.series);
 
-const isServerReady = async () => {
+async function isServerReady() {
   try {
-    const response = await fetch(`${BASE_URL}/series`);
-    // Verify the series page is actually working (not a 500 error)
-    return response.ok;
+    return (await fetch(`${BASE_URL}/series/`)).ok;
   } catch {
     return false;
   }
-};
+}
 
-describe("E2E: Series Routes", () => {
-  test("/series returns 200 and contains series content", async () => {
-    if (!(await isServerReady())) {
-      console.warn("Skipping E2E test: Server not ready at " + BASE_URL);
-      return;
+describe('E2E: Series Routes', () => {
+  test('/series renders even without published series', async () => {
+    if (!(await isServerReady())) throw new Error('Start the site before running E2E tests.');
+    const response = await fetch(`${BASE_URL}/series/`);
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain(t('series'));
+  });
+
+  test.skipIf(!sampleSeries)('a published series detail page is accessible', async () => {
+    const response = await fetch(`${BASE_URL}${getSeriesUrl(sampleSeries)}`);
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain(getSeriesData(sampleSeries)!.title);
+  });
+
+  test('unknown series returns 404', async () => {
+    expect((await fetch(`${BASE_URL}/series/nonexistent-series-slug/`)).status).toBe(404);
+  });
+
+  test.skipIf(!samplePost)('a published series post uses its canonical URL', async () => {
+    const response = await fetch(`${BASE_URL}${getPostUrl(samplePost!)}`);
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain(samplePost!.title);
+  });
+
+  test('removed demo routes return 404', async () => {
+    for (const route of ['/posts/welcome-to-amytis/', '/books/sample-book/', '/series/nextjs-deep-dive/']) {
+      expect((await fetch(`${BASE_URL}${route}`)).status).toBe(404);
     }
-
-    const response = await fetch(`${BASE_URL}/series`);
-    expect(response.status).toBe(200);
-    const text = await response.text();
-    expect(text.toLowerCase()).toContain("series");
-  });
-
-  test("/series/nextjs-deep-dive returns 200 with series title", async () => {
-    if (!(await isServerReady())) return;
-
-    const response = await fetch(`${BASE_URL}/series/nextjs-deep-dive`);
-    expect(response.status).toBe(200);
-    const text = await response.text();
-    expect(text).toContain("Next.js Deep Dive");
-  });
-
-  test("/series/nonexistent returns 404", async () => {
-    if (!(await isServerReady())) return;
-
-    const response = await fetch(`${BASE_URL}/series/nonexistent-series-slug`);
-    expect(response.status).toBe(404);
-  });
-
-  test("homepage contains series section content", async () => {
-    if (!(await isServerReady())) return;
-
-    const response = await fetch(BASE_URL);
-    expect(response.status).toBe(200);
-    const text = await response.text();
-    // Homepage should have some reference to series
-    expect(text.toLowerCase()).toContain("series");
-  });
-
-  test("post within a series is accessible at /posts/[slug]", async () => {
-    if (!(await isServerReady())) return;
-
-    // kitchen-sink is part of the nextjs-deep-dive series
-    const response = await fetch(`${BASE_URL}/posts/kitchen-sink`);
-    expect(response.status).toBe(200);
-    const text = await response.text();
-    expect(text).toContain("Kitchen Sink");
   });
 });

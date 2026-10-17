@@ -1,7 +1,9 @@
 import { describe, test, expect } from "bun:test";
 import { siteConfig } from "../../site.config";
+import { getTranslator } from '../../src/lib/i18n';
 
 const BASE_URL = "http://localhost:3000";
+const { t } = getTranslator(siteConfig.i18n.defaultLocale);
 
 describe("E2E: Navigation & Assets", () => {
   const isServerRunning = async () => {
@@ -19,7 +21,7 @@ describe("E2E: Navigation & Assets", () => {
     const response = await fetch(`${BASE_URL}/archive`);
     expect(response.status).toBe(200);
     const text = await response.text();
-    expect(text).toContain("Archive");
+    expect(text).toContain(t('archive'));
   });
 
   test("should be able to access tags page", async () => {
@@ -28,7 +30,7 @@ describe("E2E: Navigation & Assets", () => {
     const response = await fetch(`${BASE_URL}/tags`);
     expect(response.status).toBe(200);
     const text = await response.text();
-    expect(text).toContain("Tags");
+    expect(text).toContain(t('tags'));
   });
   
   test("sitemap.xml should exist and be valid XML", async () => {
@@ -50,7 +52,6 @@ describe("E2E: Navigation & Assets", () => {
     const text = await response.text();
     expect(text).toContain("<rss");
     expect(text).toContain("<channel>");
-    expect(text).toContain("<item>");
   });
 
   test("feed.atom should be a valid Atom feed", async () => {
@@ -62,7 +63,6 @@ describe("E2E: Navigation & Assets", () => {
     expect(response.headers.get("content-type")).toContain("xml");
     const text = await response.text();
     expect(text).toContain('xmlns="http://www.w3.org/2005/Atom"');
-    expect(text).toContain("<entry>");
   });
 
   test("type-specific feeds should be accessible", async () => {

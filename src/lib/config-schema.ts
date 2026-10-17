@@ -11,9 +11,8 @@ import { siteConfig as rawSiteConfig } from '../../site.config';
  * load (strict-build invariant).
  *
  * It must accept BOTH config shapes Amytis ships:
- *   - this repo's bilingual config (locale-aware fields are { en, zh } maps)
- *   - the create-amytis example (i18n disabled, locale-aware fields are plain
- *     strings)
+ *   - locale-aware fields expressed as locale maps
+ *   - single-locale fields expressed as plain strings
  * so every locale-aware field is `string | Record<string, string>`.
  *
  * Objects use Zod's default semantics (unknown keys are ignored, not rejected)

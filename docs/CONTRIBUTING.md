@@ -47,7 +47,7 @@ bun run new "Getting Started" --series my-series
 bun run new "My Review" --template default
 ```
 
-Post scaffolds come from the `templates/` directory: `--template <name>` picks `templates/<name>.mdx` (or `templates/<name>.md` with `--md`, falling back to the `.mdx` variant). Without the flag, `templates/default.mdx` is used. Add your own `templates/<name>.mdx` to create reusable frontmatter/body scaffolds; if no template file exists, the script falls back to a minimal built-in one.
+No default template files are shipped with this personal site. New posts use minimal built-in frontmatter and inherit the configured author. Custom `--template <name>` files can be added later under `templates/` if needed.
 
 ### Creating Flows (Daily Notes)
 
